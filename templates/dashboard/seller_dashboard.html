@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4"><h2>Seller Dashboard</h2><hr>
+<div class="row"><div class="col-md-3"><div class="card text-center bg-primary text-white"><div class="card-body"><h3>{{ total_products }}</h3><p>Products</p></div></div></div>
+<div class="col-md-3"><div class="card text-center bg-success text-white"><div class="card-body"><h3>{{ total_orders }}</h3><p>Orders</p></div></div></div>
+<div class="col-md-3"><div class="card text-center bg-info text-white"><div class="card-body"><h3>Tsh {{ total_sales|floatformat:0 }}</h3><p>Sales</p></div></div></div>
+<div class="col-md-3"><div class="card text-center bg-warning text-white"><div class="card-body"><h3>{{ pending_products }}</h3><p>Pending Products</p></div></div></div></div>
+
+<div class="row mt-4"><div class="col-md-12"><div class="card"><div class="card-header bg-primary text-white"><h5>Recent Orders</h5></div><div class="card-body"><div class="table-responsive"><table class="table"><thead><tr><th>Order #</th><th>Product</th><th>Qty</th><th>Amount</th><th>Payment</th><th>Status</th></tr></thead><tbody>{% for order in recent_orders %}<tr><td>{{ order.order_number }}</td><td>{{ order.product_name|truncatechars:30 }}</td><td>{{ order.quantity }}</td><td>Tsh {{ order.total|floatformat:0 }}</td><td>{{ order.payment_option }}</td><td><span class="badge bg-{% if order.status == 'delivered' %}success{% elif order.status == 'confirmed' %}info{% else %}warning{% endif %}">{{ order.status|title }}</span></td></tr>{% empty %}<td><td colspan="6" class="text-center">No orders yet</td></tr>{% endfor %}</tbody><td></div></div></div></div></div>
+</div>
+{% endblock %}

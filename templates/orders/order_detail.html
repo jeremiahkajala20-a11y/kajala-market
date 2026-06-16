@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4"><h2>Order Details</h2><hr>
+<div class="row"><div class="col-md-8"><div class="card"><div class="card-header bg-primary text-white"><h5>Order #{{ order.order_number }}</h5></div><div class="card-body"><table class="table"><thead><tr><th>Product</th><th>Quantity</th><th>Price</th><th>Total</th></tr></thead><tbody>{% for item in order.items.all %}<tr><td><img src="{{ item.product.image.url }}" style="height:40px;"> {{ item.product.name }}</td><td>x{{ item.quantity }}</td><td>Tsh {{ item.price|floatformat:0 }}</td><td>Tsh {{ item.get_total|floatformat:0 }}</td></tr>{% endfor %}</tbody><tfoot><tr><td colspan="3" class="text-end"><strong>Total:</strong></td><td><strong>Tsh {{ order.total_amount|floatformat:0 }}</strong></td></tr></tfoot></table></div></div></div>
+<div class="col-md-4"><div class="card"><div class="card-header bg-info text-white"><h5>Order Status</h5></div><div class="card-body"><p><strong>Status:</strong> <span class="badge bg-{% if order.status == 'delivered' %}success{% elif order.status == 'confirmed' %}info{% else %}warning{% endif %}">{{ order.status|title }}</span></p><p><strong>Payment Option:</strong> {{ order.get_payment_option_display }}</p></div></div>
+<div class="card mt-3"><div class="card-header bg-secondary text-white"><h5>Delivery Info</h5></div><div class="card-body"><p><strong>Address:</strong> {{ order.delivery_address }}, {{ order.city }}</p><p><strong>Phone:</strong> {{ order.phone_number }}</p><p><strong>Buyer:</strong> {{ order.buyer_name }}</p></div></div></div></div>
+</div>
+{% endblock %}

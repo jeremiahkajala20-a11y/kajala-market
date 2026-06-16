@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-7">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5><i class="fas fa-truck"></i> Delivery Information</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" id="checkoutForm">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label>Full Name</label>
+                                <input type="text" name="buyer_name" class="form-control" value="{{ user.get_full_name|default:user.username }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Email</label>
+                                <input type="email" name="buyer_email" class="form-control" value="{{ user.email }}" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Phone Number</label>
+                            <input type="tel" name="phone_number" class="form-control" value="{{ user.phone|default:'' }}" placeholder="0712345678" required>
+                        </div>
+                        <div class="mb-3">
+                            <label>Delivery Address</label>
+                            <textarea name="delivery_address" class="form-control" rows="2" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label>City/Region</label>
+                            <input type="text" name="city" class="form-control" value="Dodoma" required>
+                        </div>
+                        <div class="mb-3">
+                            <label>Additional Message (Optional)</label>
+                            <textarea name="buyer_message" class="form-control" rows="2" placeholder="Any special instructions..."></textarea>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <!-- Payment Option Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5><i class="fas fa-money-bill-wave"></i> Payment Option</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-check mb-3 p-3 border rounded">
+                        <input class="form-check-input" type="radio" name="payment_option" value="prepaid" id="prepaid" required checked>
+                        <label class="form-check-label w-100" for="prepaid">
+                            <strong><i class="fas fa-credit-card"></i> Pay Before Delivery</strong><br>
+                            <small>Pay via M-Pesa, Airtel Money, Tigo Pesa, CRDB, or NMB</small>
+                        </label>
+                    </div>
+                    <div class="form-check mb-3 p-3 border rounded">
+                        <input class="form-check-input" type="radio" name="payment_option" value="cod" id="cod" required>
+                        <label class="form-check-label w-100" for="cod">
+                            <strong><i class="fas fa-money-bill"></i> Pay After Delivery (Cash on Delivery)</strong><br>
+                            <small>Pay when you receive the product</small>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prepaid Payment Details (Visible by default) -->
+            <div id="prepaidInfo" class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5><i class="fas fa-info-circle"></i> Payment Instructions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="payment-details">
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label class="fw-bold">📱 M-Pesa / Airtel / Tigo:</label>
+                                <div class="input-group">
+                                    <input type="text" id="paymentNumber" class="form-control form-control-lg bg-light" value="{{ seller_payment_number }}" readonly>
+                                    <button class="btn btn-primary" onclick="copyToClipboard('paymentNumber')">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label class="fw-bold">🏦 Bank Name:</label>
+                                <div class="input-group">
+                                    <input type="text" id="bankName" class="form-control form-control-lg bg-light" value="{{ seller_bank }}" readonly>
+                                    <button class="btn btn-primary" onclick="copyToClipboard('bankName')">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label class="fw-bold">👤 Account Name:</label>
+                                <div class="input-group">
+                                    <input type="text" id="accountName" class="form-control form-control-lg bg-light" value="{{ seller_account_name }}" readonly>
+                                    <button class="btn btn-primary" onclick="copyToClipboard('accountName')">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label class="fw-bold">🔢 Account Number:</label>
+                                <div class="input-group">
+                                    <input type="text" id="accountNumber" class="form-control form-control-lg bg-light" value="{{ seller_account_number }}" readonly>
+                                    <button class="btn btn-primary" onclick="copyToClipboard('accountNumber')">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert alert-warning mt-3">
+                            <i class="fas fa-exclamation-triangle"></i> 
+                            <strong>Important:</strong> Include your Order Number as reference when sending payment!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COD Info (Hidden by default) -->
+            <div id="codInfo" class="card shadow-sm mb-4" style="display:none;">
+                <div class="card-header bg-warning text-dark">
+                    <h5><i class="fas fa-truck"></i> Pay After Delivery</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> You will pay when the product is delivered.<br>
+                        The seller will contact you within 24 hours.<br><br>
+                        <strong>Seller Contact:</strong>
+                        <div class="input-group mt-2">
+                            <input type="text" id="sellerContact" class="form-control form-control-lg bg-light" value="{{ seller_payment_number }}" readonly>
+                            <button class="btn btn-success" onclick="copyToClipboard('sellerContact')">
+                                <i class="fab fa-whatsapp"></i> Copy Number
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Summary Card -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    {% for item in cart.items.all %}
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>{{ item.product.name|truncatechars:25 }} x{{ item.quantity }}</span>
+                        <span>Tsh {{ item.get_total|floatformat:0 }}</span>
+                    </div>
+                    {% endfor %}
+                    <hr>
+                    <div class="d-flex justify-content-between mb-3">
+                        <h5>Total:</h5>
+                        <h5 class="text-primary">Tsh {{ cart.get_total|floatformat:0 }}</h5>
+                    </div>
+                    <button type="submit" form="checkoutForm" class="btn btn-success w-100 btn-lg">
+                        <i class="fas fa-check-circle"></i> Place Order
+                    </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Toggle between Prepaid and COD info
+    const prepaidRadio = document.getElementById('prepaid');
+    const codRadio = document.getElementById('cod');
+    const prepaidInfo = document.getElementById('prepaidInfo');
+    const codInfo = document.getElementById('codInfo');
+
+    prepaidRadio.addEventListener('change', function() {
+        if (this.checked) {
+            prepaidInfo.style.display = 'block';
+            codInfo.style.display = 'none';
+        }
+    });
+
+    codRadio.addEventListener('change', function() {
+        if (this.checked) {
+            prepaidInfo.style.display = 'none';
+            codInfo.style.display = 'block';
+        }
+    });
+
+    // Copy to clipboard function
+    function copyToClipboard(elementId) {
+        var copyText = document.getElementById(elementId);
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        document.execCommand('copy');
+        
+        // Show temporary notification
+        var btn = copyText.nextElementSibling;
+        var originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        setTimeout(function() {
+            btn.innerHTML = originalText;
+        }, 2000);
+        
+        // Also show a small alert
+        var alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed';
+        alertDiv.style.bottom = '20px';
+        alertDiv.style.right = '20px';
+        alertDiv.style.zIndex = '9999';
+        alertDiv.innerHTML = '<i class="fas fa-check-circle"></i> Copied to clipboard!';
+        document.body.appendChild(alertDiv);
+        setTimeout(function() {
+            alertDiv.remove();
+        }, 2000);
+    }
+</script>
+
+<style>
+    .payment-details .input-group .form-control {
+        font-family: monospace;
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+    }
+    .payment-details .input-group button {
+        min-width: 80px;
+    }
+</style>
+{% endblock %}

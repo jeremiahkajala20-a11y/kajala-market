@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_js %}
+<script>
+    // Hero Slider
+    const swiper = new Swiper('.hero-slider', {
+        loop: true,
+        autoplay: {
+            delay: 5000,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        effect: 'fade',
+        fadeEffect: { crossFade: true },
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Slider -->
+<div class="hero-slider swiper">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide">
+            <div class="hero-slide" style="background-image: url('/media/slider/1.jpg');">
+                <div class="hero-content">
+                    <h1>Best Electronics in Tanzania</h1>
+                    <p>Shop the latest smartphones, laptops, and accessories at unbeatable prices</p>
+                    <a href="{% url 'product_list' %}" class="btn btn-light btn-lg">Shop Now <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="swiper-slide">
+            <div class="hero-slide" style="background-image: url('/media/slider/2.jpg');">
+                <div class="hero-content">
+                    <h1>Quality Laptops & Accessories</h1>
+                    <p>Get the best deals on laptops, chargers, earphones and more</p>
+                    <a href="{% url 'product_list' %}" class="btn btn-light btn-lg">Shop Now <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="swiper-slide">
+            <div class="hero-slide" style="background-image: url('/media/slider/3.jpg');
+<div class="hero-slide" style="background-image: url('/media/slider/4.jpg');
+<div class="hero-slide" style="background-image: url('/media/slider/5.jpg');
+<div class="hero-slide" style="background-image: url('/media/slider/6.jpg');
+<div class="hero-slide" style="background-image: url('/media/slider/7.jpg');
+<div class="hero-slide" style="background-image: url('/media/slider/8.jpg');">
+                <div class="hero-content">
+                    <h1>Free Delivery Across Tanzania</h1>
+                    <p>Order now and get your products delivered to your doorstep</p>
+                    <a href="{% url 'product_list' %}" class="btn btn-light btn-lg">Shop Now <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+</div>
+
+<div class="container">
+    <!-- Categories Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h2 class="mb-4">Shop by Category</h2>
+            <div class="divider mx-auto" style="width: 80px; height: 3px; background: #ff6600; margin: 0 auto 30px;"></div>
+        </div>
+        {% for category in categories %}
+        <div class="col-md-2 col-4 mb-3">
+            <a href="{% url 'product_list' %}?category={{ category.slug }}" class="text-decoration-none">
+                <div class="category-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h6>{{ category.name }}</h6>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Featured Products -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h2 class="mb-4">🔥 Featured Products</h2>
+            <div class="divider mx-auto" style="width: 60px; height: 3px; background: #ff6600; margin: 0 auto 30px;"></div>
+        </div>
+        {% for product in featured_products %}
+        <div class="col-md-3 col-6">
+            <div class="product-card card h-100 position-relative">
+                {% if product.get_discount_percent > 0 %}
+                <div class="discount-badge">-{{ product.get_discount_percent }}%</div>
+                {% endif %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                <div class="card-body">
+                    <h6 class="card-title">{{ product.name|truncatechars:30 }}</h6>
+                    <div class="price">Tsh {{ product.price|floatformat:0 }}</div>
+                    {% if product.old_price %}
+                    <div class="old-price">Tsh {{ product.old_price|floatformat:0 }}</div>
+                    {% endif %}
+                    <div class="d-grid gap-2 mt-2">
+                        <a href="{% url 'product_detail' product.slug %}" class="btn btn-primary btn-sm">View Details</a>
+                        <a href="{% url 'add_to_cart' product.id %}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p>No featured products yet.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- New Arrivals -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h2 class="mb-4">✨ New Arrivals</h2>
+            <div class="divider mx-auto" style="width: 60px; height: 3px; background: #ff6600; margin: 0 auto 30px;"></div>
+        </div>
+        {% for product in new_products %}
+        <div class="col-md-3 col-6 mb-4">
+            <div class="product-card card h-100">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" style="height: 180px; object-fit: cover;">
+                <div class="card-body">
+                    <h6>{{ product.name|truncatechars:30 }}</h6>
+                    <div class="price">Tsh {{ product.price|floatformat:0 }}</div>
+                    <div class="d-grid gap-2 mt-2">
+                        <a href="{% url 'product_detail' product.slug %}" class="btn btn-primary btn-sm">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Features Section -->
+    <div class="row mb-5 g-4">
+        <div class="col-md-3 col-6">
+            <div class="card text-center p-3 border-0 shadow-sm">
+                <i class="fas fa-truck fa-3x text-primary mb-2"></i>
+                <h5>Free Delivery</h5>
+                <p class="small">On orders over Tsh 100,000</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card text-center p-3 border-0 shadow-sm">
+                <i class="fas fa-shield-alt fa-3x text-primary mb-2"></i>
+                <h5>Secure Payments</h5>
+                <p class="small">M-Pesa, Airtel, Tigo, Banks</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card text-center p-3 border-0 shadow-sm">
+                <i class="fas fa-undo fa-3x text-primary mb-2"></i>
+                <h5>7-Day Returns</h5>
+                <p class="small">Hassle-free returns</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card text-center p-3 border-0 shadow-sm">
+                <i class="fas fa-headset fa-3x text-primary mb-2"></i>
+                <h5>24/7 Support</h5>
+                <p class="small">Call: 0748755636</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Team Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h2 class="mb-4">👥 Our Leadership Team</h2>
+            <div class="divider mx-auto" style="width: 60px; height: 3px; background: #ff6600; margin: 0 auto 30px;"></div>
+            <p class="mb-5">Meet the dedicated team behind Kajala Market</p>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <div class="team-card">
+                <img src="/media/team/RAMA.png" alt="RAMADHAN KAJALA">
+                <div class="team-info">
+                    <h4>RAMADHAN KAJALA</h4>
+                    <p>Founder & CEO</p>
+                    <small class="text-muted">Strategy & Leadership</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <div class="team-card">
+                <img src="/media/team/WIL.jpg" alt="Wilson Mwanzemo">
+                <div class="team-info">
+                    <h4>Wilson Mwanzemo</h4>
+                    <p>Operations Director</p>
+                    <small class="text-muted">Logistics & Delivery</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <div class="team-card">
+                <img src="/media/team/JULIE.jpg" alt="Julieth Thadeo">
+                <div class="team-info">
+                    <h4>Julieth Thadeo</h4>
+                    <p>Customer Relations</p>
+                    <small class="text-muted">Support & Experience</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <div class="team-card">
+                <img src="/media/team/ANNA.jpg" alt="Warda Hussein">
+                <div class="team-info">
+                    <h4>ANONZIATA MUSIGWA</h4>
+                    <p>Marketing Director</p>
+                    <small class="text-muted">Brand & Growth</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Newsletter Section -->
+    <div class="newsletter rounded-4 mb-5">
+        <div class="container">
+            <h3>Subscribe to Our Newsletter</h3>
+            <p>Get the latest updates on new products and exclusive offers</p>
+            <form method="POST" action="{% url 'newsletter_subscribe' %}" class="d-flex justify-content-center flex-wrap">
+                {% csrf_token %}
+                <input type="email" name="email" placeholder="Enter your email" required>
+                <button type="submit" class="btn btn-light">Subscribe</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Product Images with Zoom -->
+        <div class="col-md-6">
+            <div class="position-relative">
+                <img src="{{ product.image.url }}" class="img-fluid rounded main-image" id="mainImage" style="width: 100%; height: 400px; object-fit: contain; cursor: zoom-in;">
+                <div class="row mt-3">
+                    {% if product.image %}<div class="col-3"><img src="{{ product.image.url }}" class="img-thumbnail" style="height: 80px; width: 100%; object-fit: cover; cursor: pointer;" onclick="document.getElementById('mainImage').src=this.src"></div>{% endif %}
+                    {% if product.image2 %}<div class="col-3"><img src="{{ product.image2.url }}" class="img-thumbnail" style="height: 80px; width: 100%; object-fit: cover; cursor: pointer;" onclick="document.getElementById('mainImage').src=this.src"></div>{% endif %}
+                    {% if product.image3 %}<div class="col-3"><img src="{{ product.image3.url }}" class="img-thumbnail" style="height: 80px; width: 100%; object-fit: cover; cursor: pointer;" onclick="document.getElementById('mainImage').src=this.src"></div>{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="col-md-6">
+            <h2>{{ product.name }}</h2>
+            
+            <!-- Seller Info with Rating -->
+            <div class="seller-info mb-3 p-3 bg-light rounded">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="fas fa-store"></i> Sold by: <strong>{{ product.seller.business_name|default:product.seller.username }}</strong>
+                    </div>
+                    <div class="rating">
+                        {% with seller_avg=product.seller.avg_rating|default:0 %}
+                        {% for i in "12345"|make_list %}
+                            {% if forloop.counter <= seller_avg %}
+                                <i class="fas fa-star text-warning"></i>
+                            {% else %}
+                                <i class="far fa-star text-warning"></i>
+                            {% endif %}
+                        {% endfor %}
+                        ({{ product.seller.ratings_received.count }})
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product Rating -->
+            <div class="rating mb-2">
+                {% with avg=product.avg_rating|default:0 %}
+                {% for i in "12345"|make_list %}
+                    {% if forloop.counter <= avg %}
+                        <i class="fas fa-star text-warning"></i>
+                    {% else %}
+                        <i class="far fa-star text-warning"></i>
+                    {% endif %}
+                {% endfor %}
+                <span class="text-muted">({{ product.ratings.count }} reviews)</span>
+                {% endwith %}
+            </div>
+            
+            <!-- Price Section -->
+            <div class="price-section mb-3">
+                <h2 class="text-primary d-inline">Tsh {{ product.price|floatformat:0 }}</h2>
+                {% if product.old_price %}
+                <span class="old-price text-muted ms-2">Tsh {{ product.old_price|floatformat:0 }}</span>
+                <span class="badge bg-danger ms-2">-{{ product.get_discount_percent }}%</span>
+                {% endif %}
+            </div>
+
+            <!-- Stock Status -->
+            <div class="mb-3">
+                {% if product.stock > 0 %}
+                <span class="text-success"><i class="fas fa-check-circle"></i> In Stock ({{ product.stock }} units)</span>
+                {% else %}
+                <span class="text-danger"><i class="fas fa-times-circle"></i> Out of Stock</span>
+                {% endif %}
+            </div>
+
+            <p>{{ product.description }}</p>
+
+            <!-- Quantity Selector -->
+            <div class="quantity-selector mb-3">
+                <label>Quantity:</label>
+                <input type="number" id="quantity" value="1" min="1" max="{{ product.stock }}" class="form-control w-25 d-inline-block ms-2">
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons d-flex gap-2 mb-3">
+                <button onclick="addToCart({{ product.id }})" class="btn btn-primary btn-lg flex-grow-1">
+                    <i class="fas fa-cart-plus"></i> Add to Cart
+                </button>
+                <a href="{% url 'add_wishlist' product.id %}" class="btn btn-outline-danger btn-lg">
+                    <i class="fas fa-heart"></i>
+                </a>
+            </div>
+
+            <!-- Share Buttons -->
+            <div class="share-buttons mt-3">
+                <label>Share this product:</label>
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}" target="_blank" class="btn btn-sm btn-outline-info"><i class="fab fa-twitter"></i></a>
+                <a href="https://wa.me/?text={{ request.build_absolute_uri }}" target="_blank" class="btn btn-sm btn-outline-success"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h4>Customer Reviews</h4>
+            <hr>
+            
+            {% if user.is_authenticated and user.role == 'buyer' %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5>Write a Review</h5>
+                    <form method="POST" action="{% url 'add_rating' product.id %}">
+                        {% csrf_token %}
+                        <div class="mb-2">
+                            <label>Rating</label>
+                            <select name="rating" class="form-select w-auto" required>
+                                <option value="5">★★★★★ (5)</option>
+                                <option value="4">★★★★☆ (4)</option>
+                                <option value="3">★★★☆☆ (3)</option>
+                                <option value="2">★★☆☆☆ (2)</option>
+                                <option value="1">★☆☆☆☆ (1)</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <textarea name="review" class="form-control" rows="3" placeholder="Write your review..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+
+            {% for rating in product.ratings.all %}
+            <div class="card mb-2">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div class="rating">
+                            {% for i in "12345"|make_list %}
+                                {% if forloop.counter <= rating.rating %}
+                                    <i class="fas fa-star text-warning"></i>
+                                {% else %}
+                                    <i class="far fa-star text-warning"></i>
+                                {% endif %}
+                            {% endfor %}
+                            <strong>{{ rating.buyer.username }}</strong>
+                        </div>
+                        <small class="text-muted">{{ rating.created_at|date:"M d, Y" }}</small>
+                    </div>
+                    <p class="mt-2">{{ rating.review|default:"No comment" }}</p>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-muted">No reviews yet. Be the first to review!</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Recently Viewed Products -->
+    {% if recently_viewed %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <h4>Recently Viewed</h4>
+            <hr>
+        </div>
+        {% for item in recently_viewed %}
+        <div class="col-md-2 col-4 mb-3">
+            <div class="card h-100">
+                <img src="{{ item.product.image.url }}" style="height: 100px; object-fit: cover;">
+                <div class="card-body p-2">
+                    <h6 class="small">{{ item.product.name|truncatechars:20 }}</h6>
+                    <small class="price">Tsh {{ item.product.price|floatformat:0 }}</small>
+                    <a href="{% url 'product_detail' item.product.slug %}" class="btn btn-primary btn-sm w-100 mt-2">View</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Related Products -->
+    {% if related_products %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <h4>You May Also Like</h4>
+            <hr>
+        </div>
+        {% for product in related_products %}
+        <div class="col-md-3 col-6 mb-3">
+            <div class="product-card card h-100">
+                <img src="{{ product.image.url }}" style="height: 150px; object-fit: cover;">
+                <div class="card-body">
+                    <h6>{{ product.name|truncatechars:25 }}</h6>
+                    <div class="price">Tsh {{ product.price|floatformat:0 }}</div>
+                    <a href="{% url 'product_detail' product.slug %}" class="btn btn-primary btn-sm w-100 mt-2">View</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function addToCart(productId) {
+    var quantity = document.getElementById('quantity').value;
+    window.location.href = "/cart/add/" + productId + "/?quantity=" + quantity;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white"><h5><i class="fas fa-filter"></i> Filter Products</h5></div>
+                <div class="card-body">
+                    <form method="GET">
+                        <div class="mb-3"><input type="text" name="q" class="form-control" placeholder="Search..." value="{{ request.GET.q }}"></div>
+                        <div class="mb-3"><select name="category" class="form-select"><option value="">All Categories</option>{% for cat in categories %}<option value="{{ cat.slug }}">{{ cat.name }}</option>{% endfor %}</select></div>
+                        <div class="mb-3"><input type="number" name="min_price" class="form-control mb-2" placeholder="Min Price"><input type="number" name="max_price" class="form-control" placeholder="Max Price"></div>
+                        <div class="mb-3"><select name="sort" class="form-select"><option value="newest">Newest</option><option value="price_low">Price: Low to High</option><option value="price_high">Price: High to Low</option></select></div>
+                        <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                        <a href="{% url 'product_list' %}" class="btn btn-secondary w-100 mt-2">Reset</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <h4>Products ({{ products.count }})</h4>
+            <div class="row">
+                {% for product in products %}
+                <div class="col-md-4 mb-4">
+                    <div class="card product-card h-100">
+                        <img src="{{ product.image.url }}" style="height: 180px; object-fit: cover;">
+                        <div class="card-body">
+                            <h6>{{ product.name|truncatechars:35 }}</h6>
+                            <div class="price">Tsh {{ product.price|floatformat:0 }}</div>
+                            {% if product.old_price %}<div class="old-price">Tsh {{ product.old_price|floatformat:0 }}</div>{% endif %}
+                            {% if product.get_discount_percent > 0 %}<div><span class="discount-badge">-{{ product.get_discount_percent }}%</span></div>{% endif %}
+                            <a href="{% url 'product_detail' product.slug %}" class="btn btn-primary btn-sm w-100 mt-2">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center py-5"><i class="fas fa-box-open fa-4x text-muted"></i><h4>No products found</h4></div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

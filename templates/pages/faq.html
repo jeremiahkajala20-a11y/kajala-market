@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12 text-center mb-5">
+            <h1>Frequently Asked Questions</h1>
+            <div class="divider mx-auto" style="width: 80px; height: 4px; background: #ff6600; margin: 20px auto;"></div>
+            <p class="lead">Find answers to common questions about Kajala Market</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1"><strong>1. How do I place an order?</strong></button></h2>
+                    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion"><div class="accordion-body">To place an order, simply browse our products, add items to your cart, proceed to checkout, fill in your delivery details, and confirm your order. You will receive an order confirmation number via SMS and email.</div></div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2"><strong>2. What payment options are available?</strong></button></h2>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">We offer two payment options: (1) Pay Before Delivery - via M-Pesa, Airtel Money, Tigo Pesa, CRDB, or NMB; (2) Pay After Delivery (Cash on Delivery) - you pay when you receive the product.</div></div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3"><strong>3. Is delivery free?</strong></button></h2>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Yes! We offer free delivery on all orders over Tsh 100,000 within Dodoma. For orders below Tsh 100,000, delivery fee is Tsh 5,000.</div></div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4"><strong>4. How long does delivery take?</strong></button></h2>
+                    <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Delivery within Dodoma takes 1-2 business days. For other regions in Tanzania, delivery takes 3-5 business days depending on location.</div></div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5"><strong>5. Can I return a product?</strong></button></h2>
+                    <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Yes, we have a 7-day return policy. If you're not satisfied with your purchase, contact us within 7 days of delivery for a return or exchange.</div></div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6"><strong>6. How do I become a seller?</strong></button></h2>
+                    <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Click on "Register as Seller" on our homepage, fill in your business details, and submit. Our team will review your application within 24-48 hours.</div></div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq7"><strong>7. What is the commission for sellers?</strong></button></h2>
+                    <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">We charge a 5% commission on each successful sale. This covers platform maintenance, marketing, and customer support.</div></div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq8"><strong>8. How do I track my order?</strong></button></h2>
+                    <div id="faq8" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Log in to your account and go to "My Orders" section. Click on the order number to see real-time tracking information.</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-5 text-center">
+        <div class="col-12">
+            <div class="alert alert-info">Still have questions? <a href="{% url 'contact' %}">Contact our support team</a></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

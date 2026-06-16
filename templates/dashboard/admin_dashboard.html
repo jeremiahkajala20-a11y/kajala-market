@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4"><h2>Admin Dashboard</h2><hr>
+<div class="row"><div class="col-md-3"><div class="card text-center bg-primary text-white"><div class="card-body"><h3>{{ total_sellers }}</h3><p>Sellers ({{ pending_sellers }} pending)</p></div></div></div>
+<div class="col-md-3"><div class="card text-center bg-success text-white"><div class="card-body"><h3>{{ total_buyers }}</h3><p>Buyers</p></div></div></div>
+<div class="col-md-3"><div class="card text-center bg-info text-white"><div class="card-body"><h3>{{ total_products }}</h3><p>Products ({{ pending_products }} pending)</p></div></div></div>
+<div class="col-md-3"><div class="card text-center bg-warning text-white"><div class="card-body"><h3>{{ total_orders }}</h3><p>Orders</p><small>Prepaid: {{ prepaid_orders }} | COD: {{ cod_orders }}</small></div></div></div></div>
+
+<div class="row mt-4"><div class="col-md-12"><div class="card"><div class="card-header bg-primary text-white"><h5>Quick Actions</h5></div><div class="card-body"><a href="{% url 'admin_sellers' %}?pending=1" class="btn btn-outline-primary m-1">Approve Sellers</a><a href="{% url 'admin_products' %}?pending=1" class="btn btn-outline-success m-1">Approve Products</a><a href="{% url 'admin_orders' %}" class="btn btn-outline-info m-1">Manage Orders</a><a href="/admin/" class="btn btn-outline-secondary m-1">Django Admin</a></div></div></div></div>
+</div>
+{% endblock %}

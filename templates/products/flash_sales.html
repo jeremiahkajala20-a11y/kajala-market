@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2><i class="fas fa-bolt text-warning"></i> Flash Sales</h2>
+    <hr>
+
+    {% for sale in flash_sales %}
+    <div class="card mb-4">
+        <div class="card-header bg-danger text-white">
+            <h3>{{ sale.title }}</h3>
+            <div id="countdown-{{ sale.id }}" class="countdown"></div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for product in sale.products.all %}
+                <div class="col-md-3 col-6 mb-4">
+                    <div class="card product-card h-100">
+                        <div class="discount-badge">-{{ sale.discount_percentage }}%</div>
+                        <img src="{{ product.image.url }}" style="height: 180px; object-fit: cover;">
+                        <div class="card-body">
+                            <h6>{{ product.name|truncatechars:30 }}</h6>
+                            <div class="price">Tsh {{ product.price|floatformat:0 }}</div>
+                            <div class="old-price">Tsh {{ product.old_price|floatformat:0 }}</div>
+                            <a href="{% url 'product_detail' product.slug %}" class="btn btn-primary btn-sm w-100 mt-2">Shop Now</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function startCountdown(endTime, elementId) {
+            var endDate = new Date(endTime);
+            var countdownElement = document.getElementById(elementId);
+            
+            function updateCountdown() {
+                var now = new Date();
+                var diff = endDate - now;
+                
+                if (diff <= 0) {
+                    countdownElement.innerHTML = "Sale Ended!";
+                    return;
+                }
+                
+                var hours = Math.floor(diff / (1000 * 60 * 60));
+                var minutes = Math.floor((diff % (3600000)) / (1000 * 60));
+                var seconds = Math.floor((diff % (60000)) / 1000);
+                
+                countdownElement.innerHTML = `Ends in: ${hours}h ${minutes}m ${seconds}s`;
+                setTimeout(updateCountdown, 1000);
+            }
+            
+            updateCountdown();
+        }
+        
+        startCountdown("{{ sale.end_time|date:'c' }}", "countdown-{{ sale.id }}");
+    </script>
+    {% empty %}
+    <p class="text-center">No active flash sales at the moment.</p>
+    {% endfor %}
+</div>
+{% endblock %}

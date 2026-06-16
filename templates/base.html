@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kajala Market - Tanzania's #1 Electronics Marketplace</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <style>
+
+        /* Navbar Styles - Desktop */
+@media (min-width: 992px) {
+    .navbar-nav .nav-link {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Mobile Styles */
+@media (max-width: 991px) {
+    .navbar-nav {
+        padding: 1rem 0;
+    }
+    .navbar-nav .nav-link {
+        padding: 0.5rem 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .dropdown-menu {
+        background: var(--secondary);
+        border: none;
+        padding-left: 1rem;
+    }
+    .dropdown-menu .dropdown-item {
+        color: #ccc;
+    }
+    .dropdown-menu .dropdown-item:hover {
+        background: var(--primary);
+        color: white;
+    }
+}
+
+/* Badge positioning */
+.position-relative .badge {
+    font-size: 10px;
+    padding: 2px 6px;
+}
+        :root {
+            --primary: #ff6600;
+            --primary-dark: #e55a00;
+            --secondary: #1a1a2e;
+            --success: #00b894;
+            --danger: #ff4757;
+            --warning: #ffa502;
+            --dark: #2f3542;
+            --light: #f1f2f6;
+            --gradient: linear-gradient(135deg, var(--secondary), var(--primary-dark));
+            --gradient-light: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8f9fa;
+            overflow-x: hidden;
+        }
+        
+        /* Top Bar */
+        .top-bar {
+            background: var(--primary);
+            color: white;
+            padding: 8px 0;
+            font-size: 13px;
+        }
+        
+        .top-bar a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        /* Navbar */
+        .navbar {
+            background: var(--secondary) !important;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary) !important;
+        }
+        
+        .navbar-brand i { margin-right: 8px; }
+        
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin: 0 5px;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary) !important;
+            transform: translateY(-2px);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+        
+        .nav-link:hover::after { width: 100%; }
+        
+        /* Cart Badge */
+        .cart-badge {
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            padding: 2px 8px;
+            font-size: 12px;
+            position: relative;
+            top: -8px;
+            left: -5px;
+        }
+        
+        /* Hero Slider */
+        .hero-slider {
+            margin-bottom: 50px;
+        }
+        
+        .hero-slide {
+            height: 550px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .hero-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5));
+        }
+        
+        .hero-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            z-index: 2;
+            width: 100%;
+        }
+        
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease;
+        }
+        
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            animation: fadeInUp 1.2s ease;
+        }
+        
+        /* Product Cards */
+        .product-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            background: white;
+            margin-bottom: 25px;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .product-card img {
+            height: 220px;
+            object-fit: cover;
+            width: 100%;
+            transition: transform 0.5s;
+        }
+        
+        .product-card:hover img { transform: scale(1.05); }
+        
+        .product-card .card-body { padding: 1.2rem; }
+        .product-card .price { color: var(--primary); font-size: 1.3rem; font-weight: bold; }
+        .product-card .old-price { color: #999; text-decoration: line-through; font-size: 0.9rem; margin-left: 10px; }
+        
+        .discount-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--danger);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 10;
+        }
+        
+        /* Category Cards */
+        .category-card {
+            transition: all 0.3s;
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            text-align: center;
+            padding: 20px;
+            background: white;
+            cursor: pointer;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .category-card i { font-size: 2.5rem; color: var(--primary); margin-bottom: 10px; }
+        
+        /* Team Section */
+        .team-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        
+        .team-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+        }
+        
+        .team-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .team-card .team-info {
+            padding: 20px;
+        }
+        
+        .team-card h4 { font-size: 1.2rem; font-weight: 600; margin-bottom: 5px; }
+        .team-card p { color: var(--primary); font-weight: 500; margin-bottom: 10px; }
+        
+        /* Buttons */
+        .btn-primary {
+            background: var(--primary);
+            border: none;
+            padding: 12px 25px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline-primary {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            border-radius: 8px;
+        }
+        
+        .btn-outline-primary:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--secondary);
+            color: white;
+            padding: 60px 0 30px;
+            margin-top: 60px;
+        }
+        
+        footer h5 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        
+        footer a {
+            color: #ccc;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        footer a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+        
+        footer .social-links a {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            margin-right: 10px;
+            transition: all 0.3s;
+        }
+        
+        footer .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            margin-top: 30px;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .animate-fadeInUp { animation: fadeInUp 0.6s ease-out; }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-slide { height: 400px; }
+            .hero-content h1 { font-size: 2rem; }
+            .product-card img { height: 180px; }
+            .team-card img { height: 200px; }
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
+        
+        /* Newsletter Section */
+        .newsletter {
+            background: var(--gradient-light);
+            padding: 50px 0;
+            color: white;
+            text-align: center;
+        }
+        
+        .newsletter input {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 30px;
+            width: 300px;
+            margin-right: 10px;
+        }
+        
+        /* WhatsApp Float Button */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: #25D366;
+            color: white;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 55px;
+            font-size: 28px;
+            z-index: 100;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    <i class="fas fa-phone"></i> 0748755636 &nbsp;|&nbsp;
+                    <i class="fas fa-envelope"></i> jeremiahkajala20@gmail.com
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <i class="fas fa-truck"></i> Free Delivery on Orders Over Tsh 100,000
+                </div>
+            </div>
+        </div>
+    </div>
+    
+   <!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <i class="fas fa-store"></i> Kajala Market
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <!-- Main Navigation -->
+                <li class="nav-item"><a class="nav-link" href="{% url 'home' %}"><i class="fas fa-home"></i> Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'product_list' %}"><i class="fas fa-mobile-alt"></i> Products</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'flash_sales' %}"><i class="fas fa-bolt text-warning"></i> Sales</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'blog_list' %}"><i class="fas fa-newspaper"></i> Blog</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'about' %}"><i class="fas fa-info-circle"></i> About</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}"><i class="fas fa-headset"></i> Contact</a></li>
+            </ul>
+            
+            <ul class="navbar-nav ms-auto">
+                <!-- Cart -->
+                <li class="nav-item">
+                    <a class="nav-link position-relative" href="{% url 'cart_view' %}">
+                        <i class="fas fa-shopping-cart"></i> Cart
+                        {% if cart_count > 0 %}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 10px;">
+                            {{ cart_count }}
+                        </span>
+                        {% endif %}
+                    </a>
+                </li>
+                
+                {% if user.is_authenticated %}
+                    <!-- Orders -->
+                    {% if user.role == 'buyer' %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'my_orders' %}"><i class="fas fa-truck"></i> Orders</a></li>
+                    {% endif %}
+                    
+                    <!-- Seller Dashboard -->
+                    {% if user.role == 'seller' and user.is_approved %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                            <i class="fas fa-chart-line"></i> Seller
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'seller_dashboard' %}">Dashboard</a></li>
+                            <li><a class="dropdown-item" href="{% url 'seller_products' %}">My Products</a></li>
+                            <li><a class="dropdown-item" href="{% url 'add_product' %}">Add Product</a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                    
+                    <!-- Admin Panel -->
+                    {% if user.is_staff %}
+                    <li class="nav-item"><a class="nav-link text-warning" href="{% url 'admin_dashboard' %}"><i class="fas fa-crown"></i> Admin</a></li>
+                    {% endif %}
+                    
+                    <!-- User Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle"></i> {{ user.username|truncatechars:8 }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-user"></i> Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'wishlist' %}"><i class="fas fa-heart"></i> Wishlist</a></li>
+                            {% if user.role == 'buyer' %}
+                            <li><a class="dropdown-item" href="{% url 'my_orders' %}"><i class="fas fa-truck"></i> Orders</a></li>
+                            {% endif %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"><i class="fas fa-user-plus"></i> Register</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'register_buyer' %}"><i class="fas fa-user"></i> As Buyer</a></li>
+                            <li><a class="dropdown-item" href="{% url 'register_seller' %}"><i class="fas fa-store"></i> As Seller</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show animate-fadeInUp">
+            <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}info-circle{% endif %}"></i>
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    {% block content %}{% endblock %}
+
+    <!-- WhatsApp Float Button -->
+    <a href="https://wa.me/255748755636" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <h5><i class="fas fa-store"></i> Kajala Market</h5>
+                <p>Tanzania's #1 Electronics Marketplace</p>
+                <div class="social-links mt-3">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="https://wa.me/255748755636"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'product_list' %}">Products</a></li>
+                    <li><a href="{% url 'flash_sales' %}">Flash Sales</a></li>
+                    <li><a href="{% url 'about' %}">About Us</a></li>
+                    <li><a href="{% url 'contact' %}">Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 mb-4">
+                <h5>Customer Service</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'faq' %}">FAQ</a></li>
+                    <li><a href="#">Shipping Info</a></li>
+                    <li><a href="#">Returns Policy</a></li>
+                    <li><a href="#">Terms & Conditions</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 mb-4">
+                <h5>Contact Info</h5>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-map-marker-alt"></i> Dodoma, Tanzania</li>
+                    <li><i class="fas fa-phone"></i> 0748755636</li>
+                    <li><i class="fas fa-envelope"></i> jeremiahkajala20@gmail.com</li>
+                    <li><i class="fas fa-clock"></i> Mon-Sat: 8AM - 8PM</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-0">&copy; 2024-2025 Kajala Market | Designed by Ramadhan Kajala</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1200px-Mastercard-logo.svg.png" height="20" class="me-2">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/1200px-Visa_Inc._logo.svg.png" height="20" class="me-2">
+                    <i class="fas fa-money-bill-wave fa-lg me-2"></i>
+                    <i class="fas fa-mobile-alt fa-lg"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        setTimeout(function() {
+            let alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                alert.classList.add('fade');
+                setTimeout(function() { alert.remove(); }, 500);
+            });
+        }, 5000);
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fadeInUp');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.product-card, .category-card, .team-card, .stat-card').forEach(el => observer.observe(el));
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

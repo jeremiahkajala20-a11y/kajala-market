@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12 text-center mb-5">
+            <h1>Contact Us</h1>
+            <div class="divider mx-auto" style="width: 80px; height: 4px; background: #ff6600; margin: 20px auto;"></div>
+            <p class="lead">We'd love to hear from you! Reach out to us anytime.</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-5 mb-4">
+            <div class="card shadow-sm border-0 p-4">
+                <h4><i class="fas fa-map-marker-alt text-primary"></i> Our Location</h4>
+                <p class="mt-3"><strong>Dodoma City, Tanzania</strong><br>Kikuyu Avenue, Near Posta Building</p>
+                
+                <h4 class="mt-4"><i class="fas fa-phone text-primary"></i> Phone Numbers</h4>
+                <p class="mt-3">📞 <strong>0748755636</strong> (Call & WhatsApp)<br>📞 <strong>0748755636</strong> (Customer Support)</p>
+                
+                <h4 class="mt-4"><i class="fas fa-envelope text-primary"></i> Email Addresses</h4>
+                <p class="mt-3">📧 <strong>jeremiahkajala20@gmail.com</strong><br>📧 <strong>info@kajalamarket.co.tz</strong></p>
+                
+                <h4 class="mt-4"><i class="fas fa-clock text-primary"></i> Business Hours</h4>
+                <p class="mt-3">📅 Monday - Friday: 8:00 AM - 8:00 PM<br>📅 Saturday: 9:00 AM - 6:00 PM<br>📅 Sunday: Closed (Online orders accepted)</p>
+                
+                <h4 class="mt-4"><i class="fab fa-whatsapp text-primary"></i> WhatsApp Support</h4>
+                <p class="mt-3">Click <a href="https://wa.me/255748755636" target="_blank">here</a> to chat with us on WhatsApp</p>
+            </div>
+        </div>
+        
+        <div class="col-md-7 mb-4">
+            <div class="card shadow-sm border-0 p-4">
+                <h4>Send Us a Message</h4>
+                <form method="POST" action="{% url 'contact_submit' %}">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Your Name</label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Your Email</label>
+                            <input type="email" name="email" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" name="phone" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Subject</label>
+                        <select name="subject" class="form-select" required>
+                            <option value="">Select Subject</option>
+                            <option value="Order Inquiry">Order Inquiry</option>
+                            <option value="Product Question">Product Question</option>
+                            <option value="Seller Registration">Seller Registration</option>
+                            <option value="Complaint">Complaint</option>
+                            <option value="Partnership">Partnership</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Message</label>
+                        <textarea name="message" rows="5" class="form-control" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Send Message <i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

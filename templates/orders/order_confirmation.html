@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5 text-center">
+                    <i class="fas fa-check-circle text-success fa-5x mb-4"></i>
+                    <h2 class="mb-3">Order Placed Successfully!</h2>
+                    <p class="lead">Thank you for shopping at Kajala Market</p>
+                    
+                    <div class="alert alert-success">
+                        <strong>Order Number: {{ order.order_number }}</strong><br>
+                        <strong>Total Amount: Tsh {{ order.total_amount|floatformat:0 }}</strong>
+                    </div>
+                    
+                    {% if order.payment_option == 'prepaid' %}
+                    <div class="card mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="fas fa-info-circle"></i> Payment Instructions</h5>
+                        </div>
+                        <div class="card-body text-start">
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label class="fw-bold">📱 M-Pesa / Airtel / Tigo:</label>
+                                    <div class="input-group">
+                                        <input type="text" id="paymentNumber" class="form-control form-control-lg bg-light" value="{{ seller_payment_number }}" readonly>
+                                        <button class="btn btn-primary" onclick="copyToClipboard('paymentNumber')">
+                                            <i class="fas fa-copy"></i> Copy
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label class="fw-bold">🏦 Bank Name:</label>
+                                    <div class="input-group">
+                                        <input type="text" id="bankName" class="form-control form-control-lg bg-light" value="{{ seller_bank }}" readonly>
+                                        <button class="btn btn-primary" onclick="copyToClipboard('bankName')">
+                                            <i class="fas fa-copy"></i> Copy
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label class="fw-bold">👤 Account Name:</label>
+                                    <div class="input-group">
+                                        <input type="text" id="accountName" class="form-control form-control-lg bg-light" value="{{ seller_account_name }}" readonly>
+                                        <button class="btn btn-primary" onclick="copyToClipboard('accountName')">
+                                            <i class="fas fa-copy"></i> Copy
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label class="fw-bold">🔢 Account Number:</label>
+                                    <div class="input-group">
+                                        <input type="text" id="accountNumber" class="form-control form-control-lg bg-light" value="{{ seller_account_number }}" readonly>
+                                        <button class="btn btn-primary" onclick="copyToClipboard('accountNumber')">
+                                            <i class="fas fa-copy"></i> Copy
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="alert alert-warning">
+                                <i class="fas fa-exclamation-triangle"></i> 
+                                <strong>Important:</strong> Include your Order Number <strong>{{ order.order_number }}</strong> as reference when sending payment!
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-warning">
+                        <i class="fas fa-truck"></i> <strong>Pay After Delivery:</strong><br>
+                        You will pay when the product is delivered.<br>
+                        The seller will contact you within 24 hours.<br><br>
+                        <strong>Seller Contact:</strong>
+                        <div class="input-group mt-2">
+                            <input type="text" id="sellerContact" class="form-control form-control-lg bg-light" value="{{ seller_payment_number }}" readonly>
+                            <button class="btn btn-success" onclick="copyToClipboard('sellerContact')">
+                                <i class="fab fa-whatsapp"></i> Copy Number
+                            </button>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <p>You will receive order updates via email and SMS.</p>
+                    <hr>
+                    <a href="{% url 'my_orders' %}" class="btn btn-primary">View My Orders</a>
+                    <a href="{% url 'home' %}" class="btn btn-outline-primary ms-2">Continue Shopping</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyToClipboard(elementId) {
+        var copyText = document.getElementById(elementId);
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        document.execCommand('copy');
+        
+        var btn = copyText.nextElementSibling;
+        var originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        setTimeout(function() {
+            btn.innerHTML = originalText;
+        }, 2000);
+        
+        var alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed';
+        alertDiv.style.bottom = '20px';
+        alertDiv.style.right = '20px';
+        alertDiv.style.zIndex = '9999';
+        alertDiv.innerHTML = '<i class="fas fa-check-circle"></i> Copied to clipboard!';
+        document.body.appendChild(alertDiv);
+        setTimeout(function() {
+            alertDiv.remove();
+        }, 2000);
+    }
+</script>
+
+<style>
+    .input-group .form-control {
+        font-family: monospace;
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+    }
+    .input-group button {
+        min-width: 80px;
+    }
+</style>
+{% endblock %}
