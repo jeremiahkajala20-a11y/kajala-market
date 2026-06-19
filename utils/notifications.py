@@ -64,6 +64,7 @@ Login: http://127.0.0.1:8000/dashboard/seller/
 
 # ==================== WHATSAPP NOTIFICATIONS ====================
 def send_whatsapp_notification(phone_number, message):
+    """Send WhatsApp notification - returns link only (doesn't send actual message)"""
     if not phone_number:
         print("No phone number for WhatsApp")
         return None
@@ -76,16 +77,33 @@ def send_whatsapp_notification(phone_number, message):
     return f"https://wa.me/{phone_number}?text={encoded}"
 
 def send_whatsapp_order_confirmation(order, buyer_phone, buyer_name):
+    """Send order confirmation via WhatsApp - returns link"""
     if not buyer_phone:
         return None
-    message = f"🛒 Kajala Market: Order #{order.order_number} received! Total: Tsh {order.total_amount:,.0f}"
+    message = f"""🛒 *Kajala Market - Order Confirmation*
+
+Hello {buyer_name},
+
+Thank you for your order!
+
+📦 Order: #{order.order_number}
+💰 Total: Tsh {order.total_amount:,.0f}
+🚚 Payment: {order.get_payment_option_display()}
+
+We will notify you when your order is shipped.
+
+Questions? Call us: 0748755636
+
+*Kajala Market*"""
     return send_whatsapp_notification(buyer_phone, message)
 
 def send_whatsapp_to_admin(message):
+    """Send WhatsApp to admin - returns link"""
     return send_whatsapp_notification(settings.ADMIN_PHONE, message)
 
 # ==================== SMS NOTIFICATIONS ====================
 def send_sms_notification(phone_number, message):
+    """Send SMS notification - logs to console (no real SMS without API)"""
     if not phone_number:
         print("No phone number for SMS")
         return False
@@ -98,36 +116,17 @@ def send_sms_notification(phone_number, message):
     return True
 
 def send_sms_order_confirmation(order, buyer_phone, buyer_name):
+    """Send order confirmation SMS - logs to console"""
     if not buyer_phone:
         return False
     message = f"Kajala Market: Order #{order.order_number} received! Total: Tsh {order.total_amount:,.0f}"
     return send_sms_notification(buyer_phone, message)
 
 def send_sms_to_admin(message):
+    """Send SMS to admin - logs to console"""
     return send_sms_notification(settings.ADMIN_PHONE, message)
 
-# ==================== UNIFIED FUNCTION ====================
-def send_all_notifications(order, buyer, seller, notification_type='order_placed'):
-    results = {'email': False, 'whatsapp': False, 'sms': False}
-    
-    if notification_type == 'order_placed':
-        results['email'] = send_order_confirmation_email(order, buyer)
-        
-        if buyer.phone:
-            send_whatsapp_order_confirmation(order, buyer.phone, buyer.get_full_name() or buyer.username)
-            send_sms_order_confirmation(order, buyer.phone, buyer.get_full_name() or buyer.username)
-        
-        if seller and seller.email:
-            send_new_order_to_seller_email(order, seller)
-        
-        admin_msg = f"New order #{order.order_number} from {buyer.username}. Amount: Tsh {order.total_amount:,.0f}"
-        send_whatsapp_to_admin(admin_msg)
-        send_sms_to_admin(admin_msg)
-        
-    return results
-
-# ==================== ADD MISSING FUNCTIONS ====================
-
+# ==================== ORDER STATUS UPDATES ====================
 def send_order_status_update_email(order, buyer, status):
     """Send order status update email to buyer"""
     status_messages = {
@@ -148,37 +147,15 @@ Hello {buyer.get_full_name() or buyer.username},
 Order Number: {order.order_number}
 Status: {status.upper()}
 
-Track your order: http://127.0.0.1:8000/orders/track/{order.order_number}/
+Track your order: https://kajala-market-1.onrender.com/orders/track/{order.order_number}/
 
 Kajala Market Team
 """
     return send_email_notification(buyer.email, subject, message_full)
 
-
-def send_whatsapp_order_confirmation(order, buyer_phone, buyer_name):
-    """Send order confirmation via WhatsApp"""
-    if not buyer_phone:
-        return None
-    message = f"""🛒 *Kajala Market - Order Confirmation*
-
-Hello {buyer_name},
-
-Thank you for your order!
-
-📦 Order: #{order.order_number}
-💰 Total: Tsh {order.total_amount:,.0f}
-🚚 Payment: {order.get_payment_option_display()}
-
-We will notify you when your order is shipped.
-
-Questions? Call us: 0748755636
-
-*Kajala Market*"""
-    return send_whatsapp_notification(buyer_phone, message)
-
-
+# ==================== WHATSAPP OTHER FUNCTIONS ====================
 def send_whatsapp_new_order_to_seller(seller_phone, seller_name, order):
-    """Send new order notification to seller via WhatsApp"""
+    """Send new order notification to seller via WhatsApp - returns link"""
     if not seller_phone:
         return None
     message = f"""🛍️ *NEW ORDER ALERT - Kajala Market*
@@ -192,39 +169,66 @@ You have received a new order!
 💰 Amount: Tsh {order.total_amount:,.0f}
 💳 Payment: {order.get_payment_option_display()}
 
-Login: http://127.0.0.1:8000/dashboard/seller/
+Login: https://kajala-market-1.onrender.com/dashboard/seller/
 
 *Kajala Market*"""
     return send_whatsapp_notification(seller_phone, message)
 
-
+# ==================== SMS OTHER FUNCTIONS ====================
 def send_sms_order_shipped(order, buyer_phone):
-    """Send order shipped SMS to buyer"""
+    """Send order shipped SMS to buyer - logs to console"""
     if not buyer_phone:
         return False
-    message = f"""Kajala Market: Your order #{order.order_number} has been shipped! Expected delivery: 1-3 days. Track: http://127.0.0.1:8000/orders/track/{order.order_number}/"""
+    message = f"Kajala Market: Your order #{order.order_number} has been shipped! Expected delivery: 1-3 days. Track: https://kajala-market-1.onrender.com/orders/track/{order.order_number}/"
     return send_sms_notification(buyer_phone, message)
-
 
 def send_sms_payment_confirmation(order, buyer_phone):
-    """Send payment confirmation SMS to buyer"""
+    """Send payment confirmation SMS to buyer - logs to console"""
     if not buyer_phone:
         return False
-    message = f"""Kajala Market: Payment of Tsh {order.total_amount:,.0f} for order #{order.order_number} confirmed! Thank you!"""
+    message = f"Kajala Market: Payment of Tsh {order.total_amount:,.0f} for order #{order.order_number} confirmed! Thank you!"
     return send_sms_notification(buyer_phone, message)
-
 
 def send_sms_new_order_to_seller(seller_phone, order):
-    """Send new order notification SMS to seller"""
+    """Send new order notification SMS to seller - logs to console"""
     if not seller_phone:
         return False
-    message = f"""Kajala Market: New order #{order.order_number}! Amount: Tsh {order.total_amount:,.0f}. Login: http://127.0.0.1:8000/dashboard/seller/"""
+    message = f"Kajala Market: New order #{order.order_number}! Amount: Tsh {order.total_amount:,.0f}. Login: https://kajala-market-1.onrender.com/dashboard/seller/"
     return send_sms_notification(seller_phone, message)
 
-
-def send_sms_order_confirmation(order, buyer_phone, buyer_name):
-    """Send order confirmation SMS to buyer"""
-    if not buyer_phone:
-        return False
-    message = f"""Kajala Market: Order #{order.order_number} received! Total: Tsh {order.total_amount:,.0f}. We'll notify you when shipped. Contact: 0748755636"""
-    return send_sms_notification(buyer_phone, message)
+# ==================== UNIFIED FUNCTION ====================
+def send_all_notifications(order, buyer, seller, notification_type='order_placed'):
+    """
+    Send all notifications (Email, WhatsApp, SMS)
+    WhatsApp and SMS are fast because they only generate links or logs
+    """
+    results = {'email': False, 'whatsapp': False, 'sms': False}
+    
+    if notification_type == 'order_placed':
+        # Send Email (this is the main notification)
+        results['email'] = send_order_confirmation_email(order, buyer)
+        
+        # Send Email to seller
+        if seller and seller.email:
+            send_new_order_to_seller_email(order, seller)
+        
+        # WhatsApp - just generates a link (fast)
+        if buyer.phone:
+            send_whatsapp_order_confirmation(order, buyer.phone, buyer.get_full_name() or buyer.username)
+        
+        # SMS - just logs to console (fast)
+        if buyer.phone:
+            send_sms_order_confirmation(order, buyer.phone, buyer.get_full_name() or buyer.username)
+        
+        # Admin notifications
+        admin_msg = f"New order #{order.order_number} from {buyer.username}. Amount: Tsh {order.total_amount:,.0f}"
+        send_whatsapp_to_admin(admin_msg)
+        send_sms_to_admin(admin_msg)
+        
+        # Seller WhatsApp (if seller has phone)
+        if seller and seller.phone:
+            send_whatsapp_new_order_to_seller(seller.phone, seller.business_name or seller.username, order)
+        
+        print(f"✅ Notifications completed for order #{order.order_number}")
+        
+    return results

@@ -6,6 +6,7 @@ from django.conf import settings
 from cart.models import Cart
 from orders.models import Order, OrderItem
 from utils.notifications import send_all_notifications, send_sms_to_admin, send_whatsapp_to_admin
+import threading
 
 @login_required
 def checkout(request):
@@ -55,13 +56,25 @@ def checkout(request):
         # Get seller (from first product in order)
         seller = order.items.first().product.seller if order.items.exists() else None
         
-        # Send ALL notifications (Email, WhatsApp, SMS)
-        send_all_notifications(order, request.user, seller, 'order_placed')
+        # ============ FIX: Send notifications in BACKGROUND (Async) ============
+        def send_notifications_async():
+            """Send notifications in background to speed up order placement"""
+            try:
+                # Send all notifications
+                send_all_notifications(order, request.user, seller, 'order_placed')
+                
+                # Send admin alerts
+                admin_alert = f"🛒 NEW ORDER! Order #{order.order_number} | Buyer: {buyer_name} | Amount: Tsh {total:,.0f} | Payment: {payment_option}"
+                send_whatsapp_to_admin(admin_alert)
+                send_sms_to_admin(admin_alert)
+            except Exception as e:
+                print(f"Notification error: {e}")
         
-        # Also send admin alert via WhatsApp and SMS
-        admin_alert = f"🛒 NEW ORDER! Order #{order.order_number} | Buyer: {buyer_name} | Amount: Tsh {total:,.0f} | Payment: {payment_option}"
-        send_whatsapp_to_admin(admin_alert)
-        send_sms_to_admin(admin_alert)
+        # Start background thread (won't block the response)
+        thread = threading.Thread(target=send_notifications_async)
+        thread.daemon = True
+        thread.start()
+        # ====================================================================
         
         messages.success(request, f'Order placed successfully! Order number: {order.order_number}')
         return redirect('order_confirmation', order_id=order.id)
