@@ -80,12 +80,12 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# ==================== SESSION SETTINGS (FIX) ====================
-# Use cached_db for better session persistence
-SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+# ==================== SESSION SETTINGS (30 DAYS) ====================
+# Use database for session storage (more reliable than cache)
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
-# Session age - 7 days (604800 seconds)
-SESSION_COOKIE_AGE = 604800
+# Session age - 30 days (2592000 seconds)
+SESSION_COOKIE_AGE = 2592000  # 30 days
 
 # Don't expire session when browser closes
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
@@ -93,10 +93,13 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 # Save session on every request to keep it alive
 SESSION_SAVE_EVERY_REQUEST = True
 
-# Secure session cookie
+# Session cookie settings
 SESSION_COOKIE_SECURE = False  # Set to True if using HTTPS
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
+
+# Session serialization
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
 # ==================== AUTH SETTINGS ====================
 LOGIN_URL = 'login'
