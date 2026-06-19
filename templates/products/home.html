@@ -26,10 +26,20 @@
 
 {% block content %}
 <!-- Hero Slider -->
+<!-- Hero Slider -->
 <div class="hero-slider swiper">
     <div class="swiper-wrapper">
         <div class="swiper-slide">
-            <div class="hero-slide" style="background-image: url('/media/slider/1.jpg');">
+            <div class="hero-slide" style="background-image: url('https://res.cloudinary.com/dmuqqg4m3/image/upload/v1781876926/8_ly0wiy.jpg');">
+                <div class="hero-content">
+                    <h1>Welcome to Kajala Market</h1>
+                    <p>Tanzania's #1 Electronics Marketplace</p>
+                    <a href="{% url 'product_list' %}" class="btn btn-light btn-lg">Shop Now <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="swiper-slide">
+            <div class="hero-slide" style="background-image: url('https://res.cloudinary.com/dmuqqg4m3/image/upload/v1781876926/3_ufyf0p.jpg');">
                 <div class="hero-content">
                     <h1>Best Electronics in Tanzania</h1>
                     <p>Shop the latest smartphones, laptops, and accessories at unbeatable prices</p>
@@ -38,7 +48,7 @@
             </div>
         </div>
         <div class="swiper-slide">
-            <div class="hero-slide" style="background-image: url('/media/slider/2.jpg');">
+            <div class="hero-slide" style="background-image: url('https://res.cloudinary.com/dmuqqg4m3/image/upload/v1781876927/7_wyuuvh.jpg');">
                 <div class="hero-content">
                     <h1>Quality Laptops & Accessories</h1>
                     <p>Get the best deals on laptops, chargers, earphones and more</p>
@@ -47,15 +57,19 @@
             </div>
         </div>
         <div class="swiper-slide">
-            <div class="hero-slide" style="background-image: url('/media/slider/3.jpg');
-<div class="hero-slide" style="background-image: url('/media/slider/4.jpg');
-<div class="hero-slide" style="background-image: url('/media/slider/5.jpg');
-<div class="hero-slide" style="background-image: url('/media/slider/6.jpg');
-<div class="hero-slide" style="background-image: url('/media/slider/7.jpg');
-<div class="hero-slide" style="background-image: url('/media/slider/8.jpg');">
+            <div class="hero-slide" style="background-image: url('https://res.cloudinary.com/dmuqqg4m3/image/upload/v1781876926/6_ho1rco.jpg');">
                 <div class="hero-content">
                     <h1>Free Delivery Across Tanzania</h1>
                     <p>Order now and get your products delivered to your doorstep</p>
+                    <a href="{% url 'product_list' %}" class="btn btn-light btn-lg">Shop Now <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="swiper-slide">
+            <div class="hero-slide" style="background-image: url('https://res.cloudinary.com/dmuqqg4m3/image/upload/v1781876926/5_uwckru.jpg');">
+                <div class="hero-content">
+                    <h1>Secure Payments</h1>
+                    <p>M-Pesa, Airtel, Tigo, CRDB, NMB - Pay with confidence</p>
                     <a href="{% url 'product_list' %}" class="btn btn-light btn-lg">Shop Now <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
