@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import socket
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-kajala-final-2024'
@@ -70,9 +71,14 @@ TIME_ZONE = 'Africa/Dar_es_Salaam'
 USE_I18N = True
 USE_TZ = True
 
+# ==================== STATIC & MEDIA FILES ====================
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Media files (user uploaded files like images)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # ==================== SESSION SETTINGS (FIX) ====================
 # Use cached_db for better session persistence
@@ -121,3 +127,7 @@ WHATSAPP_NUMBER = '255748755636'
 # ==================== AFRICA'S TALKING SMS ====================
 AFRICASTALKING_USERNAME = os.environ.get('AFRICASTALKING_USERNAME', 'sandbox')
 AFRICASTALKING_API_KEY = os.environ.get('AFRICASTALKING_API_KEY', '')
+
+# ==================== TIMEOUT ====================
+# Increase timeout for long operations
+socket.setdefaulttimeout(120)  # 120 seconds timeout
